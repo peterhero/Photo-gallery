@@ -56,12 +56,24 @@ let imagesData = [
 ];
 
 let loadPhoto = (photoNumber) => {
-	$('#photo').attr('src', imagesData[currentPhoto].photo);
-	$('#photo-title').text(imagesData[currentPhoto].title);
-	// $('#photo-description').text(imagesData[currentPhoto].description);
+	$('#photo').attr('src', imagesData[photoNumber].photo);
+	$('#photo-title').text(imagesData[photoNumber].title);
+	$('.thumbnail-container div').remove('.this-arrow');
+	$(`*[data-number="${photoNumber}"]`).parent().prepend('<div class="this-arrow"></div>');
 }
 
+let i = 0;
+imagesData.forEach((data) => {
+	$('.thumbnail-container').append(`<div style="position: relative"><div class="hidden-title">${data.title}<div class="hidden-arrow"></div></div><img src="${data.photo}" class="thumbnail" data-number="${i}"></img></div>`);
+	i++;
+});
+
 loadPhoto(currentPhoto);
+
+$('.thumbnail').click((event) => {
+	currentPhoto = $(event.target).attr('data-number');
+	loadPhoto(currentPhoto);
+});
 
 $('#right-arrow').click(() => {
 	currentPhoto++;
@@ -79,4 +91,10 @@ $('.text-container').hover(() => {
 	$('#photo-description').text(imagesData[currentPhoto].description);
 }, () => {
 	$('#photo-description').text("");
+});
+
+$('.thumbnail').hover((event) => {
+	$(event.target).parent().children('.hidden-title').css('visibility', 'unset');
+}, (event) => {
+	$(event.target).parent().children('.hidden-title').css('visibility', 'hidden');
 });
